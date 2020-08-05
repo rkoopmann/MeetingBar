@@ -333,10 +333,7 @@ func createEventStatusString(_ event: EKEvent) -> String {
 func openEvent(_ event: EKEvent) {
     let eventTitle = event.title ?? "No title"
     if let notes = event.notes {
-        
         var appDeepLink = URLComponents()
-        
-        // msteams:// deeplink-goes-here
         let teamsLink = getMatch(text: notes, regex: LinksRegex.teams)
         if let link = teamsLink {
             if let teamsURL = URL(string: link) {
