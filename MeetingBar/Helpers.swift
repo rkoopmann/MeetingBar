@@ -33,21 +33,36 @@ func openLinkInDefaultBrowser(_ link: URL) {
 
 func cleanUpNotes(_ notes: String) -> String {
     let zoomSeparator = "\n──────────"
-    let teamsSeparator = "\n──────────"
     let meetSeparator = "-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-"
-    let cleanNotes = notes.components(separatedBy: zoomSeparator)[0].components(separatedBy: teamsSeparator)[0].components(separatedBy: meetSeparator)[0]
+    let cleanNotes = notes.components(separatedBy: zoomSeparator)[0].components(separatedBy: meetSeparator)[0]
     return cleanNotes
 }
 
-func generateTitleSample(_ showTitle: Bool, _ offset: Int) -> String {
-    var title: String = "Meeting"
-    if showTitle {
+func generateTitleSample(_ titleFormat: EventTitleFormat, _ etaFormat: ETAFormat, _ offset: Int) -> String {
+    var title: String
+    switch titleFormat {
+    case .hide:
+        title = "Meeting"
+    case .show:
         title = "Long title which may not be displayed in your status bar"
         let index = title.index(title.startIndex, offsetBy: offset, limitedBy: title.endIndex)
         title = String(title[...(index ?? title.endIndex)])
         if offset < Int(TitleLengthLimits.max) {
             title += "..."
         }
+    case .dot:
+        title = "•"
     }
-    return "\(title) in 5 min"
+    
+    var eta: String
+    switch etaFormat {
+    case .full:
+        eta = "1 hour 25 minutes"
+    case .short:
+        eta = "1 hr 25 min"
+    case .abbreviated:
+        eta = "1h 25m"
+    }
+
+    return "\(title) in \(eta)"
 }
